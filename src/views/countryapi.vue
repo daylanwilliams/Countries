@@ -10,7 +10,7 @@
 			</li>
 		</ul>
 		<nav aria-label="Page navigation example">
-			<ul class="pagination justify-content-center"
+			<ul class="pagination justify-content-center" aria-controls="itemList"
 				:v-model="currentPage"
 				:total-rows="rows"
 				:per-page="perPage">
@@ -45,9 +45,6 @@ export default {
 		}
 	},
 	methods: {
-		onPageChange(page) {
-			this.currentPage = page;
-		},
 		send(selected) {
 			this.$store.dispatch('SelectedCountry', selected);
 		},
