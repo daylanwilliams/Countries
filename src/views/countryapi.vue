@@ -33,8 +33,15 @@ export default {
 		return {
 			search: '',
 			currentPage: 1,
-			rows: 200,
-			perPage: 10
+			perPage:10,
+
+			rows: this.$store.getters.getAllCountries.length,
+			get itemsForList() {
+				return this.results.slice(
+					(this.currentPage - 1) * this.perPage,
+					this.currentPage * this.perPage,
+				);
+			}
 		}
 	},
 	methods: {
@@ -42,14 +49,13 @@ export default {
 			this.currentPage = page;
 		},
 		send(selected) {
-			console.log(selected);
 			this.$store.dispatch('SelectedCountry', selected);
 		},
 	},
 	computed: {
 		results(){
 			return this.$store.getters.getAllCountries;
-		}
+		},
 	}
 }
 </script>
