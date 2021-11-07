@@ -1,14 +1,27 @@
 <template>
 	<div class="countryview">
 		<div class="input-group flex-nowrap">
-			<input type="text"  v-model="search" class="form-control mb-2" placeholder="Search Countries" aria-label="Countries" aria-describedby="addon-wrapping">
+			<input type="text"  v-model="search" class="form-control mb-2" placeholder="Search Countries"
+			aria-label="Countries" aria-describedby="addon-wrapping">
 		</div>
-		<ul class="list-group">
-			<li class="list-group-item" v-for="(result, idx) in results[0]" :key="idx">
-				{{idx + 1}}. {{result.name.common}} - {{result.region}}
-				<button type="button" class="btn btn-primary"  @click="send(result.name.common)">Add To List</button>
-			</li>
-		</ul>
+		<div class="accordion" id="accordionExample">
+			<div class="accordion-item" v-for="(item, index) in items[0]" :key="item.id">
+				<h2 class="accordion-header" :id="'heading'+item">
+					<button class="accordion-button" :class="{ 'collapsed': index !== 0 }" type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse'+index" aria-expanded="true" :aria-controls="'collapse'+item">
+					{{index + 1}}. {{item.name.common}} - {{item.region}}
+					</button>
+				</h2>
+				<div :id="'collapse'+index" class="accordion-collapse collapse" :class="{ 'show': index === 0 }" :aria-labelledby="'heading'+item" data-bs-parent="#accordionExample">
+					<div class="accordion-body">
+						{{item.region}}
+						{{item.subregion}}
+						{{item.flag}}
+						{{item.latlng}}
+						<button type="button" class="btn btn-primary"  @click="send(item.name.common)">Add To List</button>
+					</div>
+				</div>
+			</div>
+		</div>
 		<nav aria-label="Page navigation example">
 			<ul class="pagination justify-content-center" aria-controls="itemList"
 				:v-model="currentPage"
@@ -34,6 +47,7 @@ export default {
 			search: '',
 			currentPage: 1,
 			perPage:10,
+			items: this.$store.getters.getAllCountries,
 
 			rows: this.$store.getters.getAllCountries.length,
 			get itemsForList() {
@@ -53,6 +67,11 @@ export default {
 		results(){
 			return this.$store.getters.getAllCountries;
 		},
+		filteredItems() {
+			return this.items.filter(item => {
+				return item.type.toLowerCase().indexOf(this.search.toLowerCase()) > -1
+			})
+		}
 	}
 }
 </script>
